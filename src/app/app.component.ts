@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Space } from './space.model';
 
 @Component({
@@ -6,7 +6,7 @@ import { Space } from './space.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   colors: string[] = ['red','orange','green','blue','pink','salmon','darkgray','black'];
   board = [];
   difficultySettings = [
@@ -31,10 +31,20 @@ export class AppComponent {
   ]
   difficultyRating: number;
   currentDifficulty;
+  initialClick: boolean = true;
 
+  ngOnInit(){
+    this.genBoard(0);
+  }
 
-  genBoard(difficulty: string) {
-    this.difficultyRating = parseInt(difficulty,10);
+  onChange(optionFromMenu) {
+    this.genBoard(parseInt(optionFromMenu,10));
+    this.initialClick = true;
+  }
+
+  genBoard(difficulty: number) {
+    this.board.length = 0;
+    this.difficultyRating = difficulty;
     this.currentDifficulty = this.difficultySettings[this.difficultyRating];
     for(let x = 0; x < this.currentDifficulty.x; x++){
       this.board.push([]);
@@ -45,7 +55,7 @@ export class AppComponent {
         this.board[x].push(new Space(x,y));
       }
     }
-    this.genBombs();
+    this.logBoard();
   }
 
   genBombs(){
@@ -57,11 +67,11 @@ export class AppComponent {
       do {
         x = Math.floor(Math.random() * xMax);
         y = Math.floor(Math.random() * yMax);
-        console.log(`\ttry @ (${x},${y})`);
       } while(this.board[x][y].isBomb);
-      console.log(`plant @ (${x},${y})`)
       this.board[x][y].isBomb = true;
     }
+
+    // this.logBoard();
     this.countBombs();
   }
 
@@ -70,14 +80,14 @@ export class AppComponent {
       for(let y = 0; y < this.board[0].length; y++){
         if(!this.board[x][y].isBomb){
 
-          if(x-1 > 0 && y-1 > 0 && this.board[x-1][y-1].isBomb) this.board[x][y].bombCount += 1;
-          if(x-1 > 0 && this.board[x-1][y].isBomb) this.board[x][y].bombCount += 1;
-          if(x-1 > 0 && y+1 > this.board[0].length && this.board[x-1][y+1].isBomb) this.board[x][y].bombCount += 1;
+          if(x-1 >= 0 && y-1 >= 0 && this.board[x-1][y-1].isBomb) this.board[x][y].bombCount += 1;
+          if(x-1 >= 0 && this.board[x-1][y].isBomb) this.board[x][y].bombCount += 1;
+          if(x-1 >= 0 && y+1 < this.board[0].length && this.board[x-1][y+1].isBomb) this.board[x][y].bombCount += 1;
 
-          if(y-1 > 0 && this.board[x][y-1].isBomb) this.board[x][y].bombCount += 1;
+          if(y-1 >= 0 && this.board[x][y-1].isBomb) this.board[x][y].bombCount += 1;
           if(y+1 < this.board[0].length && this.board[x][y+1].isBomb) this.board[x][y].bombCount += 1;
 
-          if(x+1 < this.board.length && y-1 > 0 && this.board[x+1][y-1].isBomb) this.board[x][y].bombCount += 1;
+          if(x+1 < this.board.length && y-1 >= 0 && this.board[x+1][y-1].isBomb) this.board[x][y].bombCount += 1;
           if(x+1 < this.board.length && this.board[x+1][y].isBomb) this.board[x][y].bombCount += 1;
           if(x+1 < this.board.length && y+1 < this.board[0].length && this.board[x+1][y+1].isBomb) this.board[x][y].bombCount += 1;
         }
@@ -96,13 +106,19 @@ export class AppComponent {
           line = line.concat(`${this.board[x][y].bombCount}  `);
         }
       }
-      console.log(line);
       line = '';
     }
   }
 
+
   updateBoard(space: Space){
-    console.log(this.board[space.x][space.y].clickedStatus);
+    if(this.initialClick) {
+      do {
+        this.genBoard(this.difficultyRating);
+        this.genBombs();
+      } while(this.board[space.x][space.y].bombCount !== 0 || this.board[space.x][space.y].isBomb)
+      this.initialClick = false;
+    }
     if(this.board[space.x][space.y].clickedStatus !== 'flagged'){
       if(space.isBomb){
         alert("KABLOOOM, game over")
@@ -114,13 +130,10 @@ export class AppComponent {
   }
 
   reveal(x: number, y: number){
-    console.log(x);
-    console.log(y);
     if(x >= 0 && x < this.board.length && y >= 0 && y < this.board[0].length && !this.board[x][y].isClicked && !this.board[x][y].isBomb && this.board[x][y].clickedStatus !== 'flagged'){
       this.board[x][y].isClicked = true;
       this.board[x][y].clickedStatus = 'revealed';
       if(this.board[x][y].bombCount === 0){
-        console.log(`checking: (${x},${y})`)
         this.reveal(x-1,y-1);
         this.reveal(x-1,y);
         this.reveal(x-1,y+1);
