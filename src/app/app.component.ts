@@ -61,5 +61,42 @@ export class AppComponent {
       console.log(`plant @ (${x},${y})`)
       this.board[x][y].isBomb = true;
     }
+    this.countBombs();
+  }
+
+  countBombs() {
+    for(let x = 0; x < this.board.length; x++){
+      for(let y = 0; y < this.board[0].length; y++){
+        if(!this.board[x][y].isBomb){
+
+          if(x-1 > 0 && y-1 > 0 && this.board[x-1][y-1].isBomb) this.board[x][y].bombCount += 1;
+          if(x-1 > 0 && this.board[x-1][y].isBomb) this.board[x][y].bombCount += 1;
+          if(x-1 > 0 && y+1 > this.board[0].length && this.board[x-1][y+1].isBomb) this.board[x][y].bombCount += 1;
+
+          if(y-1 > 0 && this.board[x][y-1].isBomb) this.board[x][y].bombCount += 1;
+          if(y+1 < this.board[0].length && this.board[x][y+1].isBomb) this.board[x][y].bombCount += 1;
+
+          if(x+1 < this.board.length && y-1 > 0 && this.board[x+1][y-1].isBomb) this.board[x][y].bombCount += 1;
+          if(x+1 < this.board.length && this.board[x+1][y].isBomb) this.board[x][y].bombCount += 1;
+          if(x+1 < this.board.length && y+1 < this.board[0].length && this.board[x+1][y+1].isBomb) this.board[x][y].bombCount += 1;
+        }
+      }
+    }
+    this.logBoard();
+  }
+
+  logBoard(){
+    let line = '';
+    for(let x = 0; x < this.board.length; x++){
+      for(let y = 0; y < this.board[0].length; y++){
+        if(this.board[x][y].isBomb){
+          line = line.concat('B  ');
+        } else {
+          line = line.concat(`${this.board[x][y].bombCount}  `);
+        }
+      }
+      console.log(line);
+      line = '';
+    }
   }
 }
