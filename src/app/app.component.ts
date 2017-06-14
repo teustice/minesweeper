@@ -8,8 +8,7 @@ import { Space } from './space.model';
 })
 export class AppComponent {
   board = [];
-  difficulty: number = 0;
-  difficultySettings: [] = [
+  difficultySettings = [
     {
       name: 'beginner',
       x: 8,
@@ -29,18 +28,38 @@ export class AppComponent {
       bombs: 99
     }
   ]
+  difficultyRating: number;
+  currentDifficulty;
 
-  genBoard(difficultySetting: number) {
-    let difficulty = difficultySettings[difficultySetting];
-    for(let x = 0; x < difficulty.x; x++){
+
+  genBoard(difficulty: string) {
+    this.difficultyRating = parseInt(difficulty,10);
+    this.currentDifficulty = this.difficultySettings[this.difficultyRating];
+    for(let x = 0; x < this.currentDifficulty.x; x++){
       this.board.push([]);
     }
 
-    for(let x = 0; x < difficulty.x; x++){
-      for(let y = 0; y < difficulty.y; y++){
+    for(let x = 0; x < this.currentDifficulty.x; x++){
+      for(let y = 0; y < this.currentDifficulty.y; y++){
         this.board[x].push(new Space(x,y));
       }
     }
-    this.genBombs(difficulty.bombs);
+    this.genBombs();
+  }
+
+  genBombs(){
+    let bombCount = this.currentDifficulty.bombs
+    let xMax = this.currentDifficulty.x;
+    let yMax = this.currentDifficulty.y;
+    for(let bombs = 0; bombs < bombCount; bombs++){
+      let x:number, y:number;
+      do {
+        x = Math.floor(Math.random() * xMax);
+        y = Math.floor(Math.random() * yMax);
+        console.log(`\ttry @ (${x},${y})`);
+      } while(this.board[x][y].isBomb);
+      console.log(`plant @ (${x},${y})`)
+      this.board[x][y].isBomb = true;
+    }
   }
 }
