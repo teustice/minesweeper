@@ -1,2 +1,8 @@
 <h1>Minesweeper</h1>
-<button (click)="genBoard('0')" type="button">generate</button>
+<button (click)="genBoard('2')" type="button">generate</button>
+
+
+<div *ngFor="let row of board" class="row">
+  <div *ngFor="let space of row"class="space">
+  </div>
+</div>
