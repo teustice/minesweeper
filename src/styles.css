@@ -5,6 +5,7 @@
 }
 
 .space {
+  vertical-align: top;
   height: 20px;
   width: 20px;
   background-color: tomato;
@@ -13,4 +14,11 @@
 }
 .space:hover{
   background-color: salmon;
+}
+
+.bomb-count {
+  font-size: 20px;
+  text-align: center;
+  color: white;
+  margin-left: 6px;
 }

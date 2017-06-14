@@ -99,4 +99,34 @@ export class AppComponent {
       line = '';
     }
   }
+
+  updateBoard(space: Space){
+    if(space.isBomb){
+      alert("KABLOOOM, game over")
+    } else{
+      this.reveal(space.x,space.y)
+      space.isClicked = true;
+    }
+  }
+
+  reveal(x: number, y: number){
+    console.log(x);
+    console.log(y);
+    if(x > 0 && x < this.board.length && y > 0 && y < this.board[0].length && !this.board[x][y].isClicked && !this.board[x][y].isBomb){
+      this.board[x][y].isClicked = true;
+      if(this.board[x][y].bombCount === 0){
+        console.log(`checking: (${x},${y})`)
+        this.reveal(x-1,y-1);
+        this.reveal(x-1,y);
+        this.reveal(x-1,y+1);
+
+        this.reveal(x,y-1);
+        this.reveal(x,y+1);
+
+        this.reveal(x+1,y-1);
+        this.reveal(x+1,y);
+        this.reveal(x+1,y+1);
+      }
+    }
+  }
 }
