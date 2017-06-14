@@ -1,24 +1,78 @@
 /* You can add global styles to this file, and also import other style files */
-.row {
-  height: 20px;
-  margin-bottom: 1px;
+body {
+  text-align: center;
+  background-color: lightgray;
 }
 
-.space {
+.row {
+  height: auto;
+}
+
+.row div {
   vertical-align: top;
   height: 20px;
   width: 20px;
-  background-color: tomato;
-  margin-left: 1px;
   display: inline-block;
+  font-family: sans-serif;
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 22px;
 }
-.space:hover{
-  background-color: salmon;
+
+.hidden {
+  border-style: outset;
+  background-color: rgb(193,193,193);
+}
+
+.flagged {
+  background-color: black;
+  border-style: outset;
+}
+
+.revealed {
+  border: 1px solid gray;
+  padding: 2px;
+  background-color: rgb(193,193,193);
 }
 
 .bomb-count {
-  font-size: 20px;
   text-align: center;
   color: white;
-  margin-left: 6px;
+  margin-left: 4px;
+}
+
+.c0 {
+  color:rgb(193,193,193);
+}
+
+.c1 {
+  color:rgb(0,0,255);
+}
+
+.c2 {
+  color:rgb(0,128,0);
+}
+
+.c3 {
+  color:rgb(255,0,0);
+}
+
+.c4 {
+  color:rgb(0,0,128);
+}
+
+.c5 {
+  color:rgb(128,0,0);
+}
+
+.c6 {
+  color:rgb(0,128,128);
+}
+
+.c7 {
+  color:rgb(0,0,0);
+}
+
+.c8 {
+  color:rgb(128,128,128);
 }

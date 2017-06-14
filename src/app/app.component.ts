@@ -7,6 +7,7 @@ import { Space } from './space.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  colors: string[] = ['red','orange','green','blue','pink','salmon','darkgray','black'];
   board = [];
   difficultySettings = [
     {
@@ -101,19 +102,23 @@ export class AppComponent {
   }
 
   updateBoard(space: Space){
-    if(space.isBomb){
-      alert("KABLOOOM, game over")
-    } else{
-      this.reveal(space.x,space.y)
-      space.isClicked = true;
+    console.log(this.board[space.x][space.y].clickedStatus);
+    if(this.board[space.x][space.y].clickedStatus !== 'flagged'){
+      if(space.isBomb){
+        alert("KABLOOOM, game over")
+      } else{
+        this.reveal(space.x,space.y)
+        space.isClicked = true;
+      }
     }
   }
 
   reveal(x: number, y: number){
     console.log(x);
     console.log(y);
-    if(x > 0 && x < this.board.length && y > 0 && y < this.board[0].length && !this.board[x][y].isClicked && !this.board[x][y].isBomb){
+    if(x >= 0 && x < this.board.length && y >= 0 && y < this.board[0].length && !this.board[x][y].isClicked && !this.board[x][y].isBomb && this.board[x][y].clickedStatus !== 'flagged'){
       this.board[x][y].isClicked = true;
+      this.board[x][y].clickedStatus = 'revealed';
       if(this.board[x][y].bombCount === 0){
         console.log(`checking: (${x},${y})`)
         this.reveal(x-1,y-1);
@@ -127,6 +132,19 @@ export class AppComponent {
         this.reveal(x+1,y);
         this.reveal(x+1,y+1);
       }
+    }
+  }
+
+  getColor(index: string){
+    return this.colors[parseInt(index,10)];
+  }
+
+  flagThat(space: Space) {
+    if(this.board[space.x][space.y].clickedStatus === 'flagged'){
+      this.board[space.x][space.y].clickedStatus = 'hidden';
+    }
+    else if(this.board[space.x][space.y].clickedStatus === 'hidden'){
+      this.board[space.x][space.y].clickedStatus = 'flagged';
     }
   }
 }
