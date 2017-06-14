@@ -32,12 +32,13 @@ export class AppComponent implements OnInit {
   difficultyRating: number;
   currentDifficulty;
   initialClick: boolean = true;
-
+  didYouWin;
   ngOnInit(){
     this.genBoard(0);
   }
 
   onChange(optionFromMenu) {
+    this.didYouWin = ''
     this.genBoard(parseInt(optionFromMenu,10));
     this.initialClick = true;
   }
@@ -114,6 +115,7 @@ export class AppComponent implements OnInit {
 
 
   updateBoard(space: Space){
+    // this.initialize(space);
     if(this.initialClick) {
       do {
         this.genBoard(this.difficultyRating);
@@ -128,6 +130,7 @@ export class AppComponent implements OnInit {
       } else{
         this.reveal(space.x,space.y)
         space.isClicked = true;
+        this.victory();
       }
     }
   }
@@ -138,6 +141,22 @@ export class AppComponent implements OnInit {
         this.board[x][y].isClicked = true;
         this.board[x][y].clickedStatus = 'revealed';
       }
+    }
+    this.didYouWin = 'GAME OVER'
+  }
+
+  victory(){
+    let totalClicked = 0;
+    for(let x = 0; x < this.board.length; x++){
+      for(let y = 0; y < this.board[0].length; y++){
+        if(this.board[x][y].isClicked === true){
+          totalClicked += 1;
+        }
+      }
+    }
+
+    if(totalClicked === ((this.currentDifficulty.x * this.currentDifficulty.y) - this.currentDifficulty.bombs)){
+      this.didYouWin = 'Victory is yours!'
     }
   }
 
