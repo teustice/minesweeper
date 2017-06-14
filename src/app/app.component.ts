@@ -90,6 +90,8 @@ export class AppComponent implements OnInit {
           if(x+1 < this.board.length && y-1 >= 0 && this.board[x+1][y-1].isBomb) this.board[x][y].bombCount += 1;
           if(x+1 < this.board.length && this.board[x+1][y].isBomb) this.board[x][y].bombCount += 1;
           if(x+1 < this.board.length && y+1 < this.board[0].length && this.board[x+1][y+1].isBomb) this.board[x][y].bombCount += 1;
+        } else {
+          this.board[x][y].bombCount = 9;
         }
       }
     }
@@ -121,10 +123,20 @@ export class AppComponent implements OnInit {
     }
     if(this.board[space.x][space.y].clickedStatus !== 'flagged'){
       if(space.isBomb){
-        alert("KABLOOOM, game over")
+        console.log("KABLOOOM, game over")
+        this.gameOver();
       } else{
         this.reveal(space.x,space.y)
         space.isClicked = true;
+      }
+    }
+  }
+
+  gameOver(){
+    for(let x = 0; x < this.board.length; x++){
+      for(let y = 0; y < this.board[0].length; y++){
+        this.board[x][y].isClicked = true;
+        this.board[x][y].clickedStatus = 'revealed';
       }
     }
   }
