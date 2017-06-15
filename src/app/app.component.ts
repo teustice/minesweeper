@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Space } from './space.model';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,12 @@ import { Space } from './space.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  players: FirebaseListObservable<any[]>;
+
+  constructor(private database: AngularFireDatabase) {
+    this.players = database.list('players');
+  }
+
   colors: string[] = ['red','orange','green','blue','pink','salmon','darkgray','black'];
   board = [];
   difficultySettings = [
@@ -35,17 +42,20 @@ export class AppComponent implements OnInit {
   didYouWin;
   gameClock: number = 0;
   clockInterval;
+  gameWon: boolean = false;
 
   ngOnInit(){
     this.genBoard(0);
+    console.log(this.players);
   }
 
   onChange(optionFromMenu) {
     this.didYouWin = ''
     this.genBoard(parseInt(optionFromMenu,10));
     this.initialClick = true;
-    clearInterval(this.clockInterval);
     this.gameClock = 0;
+    this.gameWon = false;
+    clearInterval(this.clockInterval);
   }
 
   genBoard(difficulty: number) {
@@ -168,6 +178,7 @@ export class AppComponent implements OnInit {
 
     if(totalClicked === ((this.currentDifficulty.x * this.currentDifficulty.y) - this.currentDifficulty.bombs)){
       clearInterval(this.clockInterval);
+      this.gameWon = true;
       this.didYouWin = 'Victory is yours!'
     }
   }
@@ -202,5 +213,9 @@ export class AppComponent implements OnInit {
     else if(this.board[space.x][space.y].clickedStatus === 'hidden'){
       this.board[space.x][space.y].clickedStatus = 'flagged';
     }
+  }
+
+  submitForm(name) {
+    this.players.push({name: name, time: this.gameClock});
   }
 }

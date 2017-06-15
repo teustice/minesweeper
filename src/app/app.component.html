@@ -12,3 +12,17 @@
 </div>
 <h1>{{didYouWin}}</h1>
 <h2>Time Passed: {{gameClock}}</h2>
+
+<div *ngIf="gameWon">
+    <label>Add your name to the leaderboard:</label>
+    <br>
+    <input #playerName>
+    <button (click)="submitForm(playerName.value); playerName.value='';">Add</button>
+</div>
+<hr>
+<h1>LEADERBOARD</h1>
+<div *ngFor="let player of players | async">
+  <div>
+    <h3><em>PLAYER: {{player.name}}</em> SCORE: {{player.time}}</h3>
+  </div>
+</div>
