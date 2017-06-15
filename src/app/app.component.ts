@@ -33,6 +33,9 @@ export class AppComponent implements OnInit {
   currentDifficulty;
   initialClick: boolean = true;
   didYouWin;
+  gameClock: number = 0;
+  clockInterval;
+
   ngOnInit(){
     this.genBoard(0);
   }
@@ -41,6 +44,8 @@ export class AppComponent implements OnInit {
     this.didYouWin = ''
     this.genBoard(parseInt(optionFromMenu,10));
     this.initialClick = true;
+    clearInterval(this.clockInterval);
+    this.gameClock = 0;
   }
 
   genBoard(difficulty: number) {
@@ -121,6 +126,7 @@ export class AppComponent implements OnInit {
         this.genBoard(this.difficultyRating);
         this.genBombs();
       } while(this.board[space.x][space.y].bombCount !== 0 || this.board[space.x][space.y].isBomb)
+      this.gameTimer();
       this.initialClick = false;
     }
     if(this.board[space.x][space.y].clickedStatus !== 'flagged'){
@@ -135,6 +141,10 @@ export class AppComponent implements OnInit {
     }
   }
 
+  gameTimer() {
+      this.clockInterval = setInterval(() => this.gameClock += 1, 1000);
+  }
+
   gameOver(){
     for(let x = 0; x < this.board.length; x++){
       for(let y = 0; y < this.board[0].length; y++){
@@ -142,6 +152,7 @@ export class AppComponent implements OnInit {
         this.board[x][y].clickedStatus = 'revealed';
       }
     }
+    clearInterval(this.clockInterval);
     this.didYouWin = 'GAME OVER'
   }
 
@@ -156,6 +167,7 @@ export class AppComponent implements OnInit {
     }
 
     if(totalClicked === ((this.currentDifficulty.x * this.currentDifficulty.y) - this.currentDifficulty.bombs)){
+      clearInterval(this.clockInterval);
       this.didYouWin = 'Victory is yours!'
     }
   }
