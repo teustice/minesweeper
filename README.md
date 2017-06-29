@@ -1,10 +1,26 @@
 # Minesweeper
+_Classic minesweeper. Made using AngularJS and firebase_
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+## Installation/setup
+* Clone the repository, and run the following commands to install dependencies
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```
+$ npm install
+$ npm install promise-polyfill --save-exact
+$ bower install
+```
+* Create a file named `api-keys.ts` in your /src/app folder
+* Create a firebase project, and add your firebase credentials to the file like so
+```
+export var masterFirebaseConfig = {
+    apiKey: "xxxx",
+    authDomain: "xxxx.firebaseapp.com",
+    databaseURL: "https://xxxx.firebaseio.com",
+    storageBucket: "xxxx.appspot.com",
+    messagingSenderId: "xxxx"
+  };
+```
+* Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
@@ -14,15 +30,15 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Page Views
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+![](https://github.com/teustice/minesweeper/blob/master/src/assets/img/Screen%20Shot%202017-06-29%20at%201.19.57%20PM.png)
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+For further help, please contact me through github.
+
+## License
+
+MIT, Copyright by Tanner Eustice, Aubrey Masten
